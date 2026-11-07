@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="ko" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파란 한걸음 - 나를 위한 다정한 루틴 플래너</title>
+
+    <!-- PWA meta tags -->
+    <meta name="theme-color" content="#0c8ce9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="파란한걸음">
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/0c8ce9/ffffff?text=Step">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Noto Sans KR & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Inline Web App Manifest -->
+    <link rel="manifest" id="manifestPlaceholder">
+    <script>
+        const manifestData = {
+            "name": "파란 한걸음 - 다정한 루틴 플래너",
+            "short_name": "파란한걸음",
+            "description": "ADHD 및 체력적 부담이 있는 분들을 위한 시각적 10분 순환 타이머 & 자동 루틴 앱",
+            "start_url": "./index.html",
+            "display": "standalone",
+            "background_color": "#f8fafc",
+            "theme_color": "#0c8ce9",
+            "icons": [
+                {
+                    "src": "https://placehold.co/192x192/0c8ce9/ffffff?text=Step",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                },
+                {
+                    "src": "https://placehold.co/512x512/0c8ce9/ffffff?text=Step",
+                    "sizes": "512x512",
+                    "type": "image/png"
+                }
+            ]
+        };
+        const stringManifest = JSON.stringify(manifestData);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        document.getElementById('manifestPlaceholder').setAttribute('href', manifestURL);
+    </script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        softBlue: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#bae0fd',
+                            300: '#7cc5fb',
+                            400: '#36a8f6',
+                            500: '#0c8ce9',
+                            600: '#006ec7',
+                            700: '#0058a3',
+                            800: '#054a85',
+                            900: '#0a3e6f',
+                        },
+                        warmRest: {
+                            50: '#fffbeb',
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            500: '#f59e0b',
+                        },
+                        calmLavender: {
+                            50: '#f7f5ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            500: '#8b5cf6',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(240, 247, 255, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bae0fd;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-full pb-24 transition-colors duration-200">
+
+    <!-- Top Header -->
+    <header class="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-softBlue-100 dark:border-slate-800 px-4 py-3">
+        <div class="max-w-md mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-9 h-9 rounded-2xl bg-softBlue-500 text-white flex items-center justify-center shadow-md shadow-softBlue-200 dark:shadow-none">
+                    <i class="fa-solid font-bold fa-cloud text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-softBlue-600 dark:text-softBlue-400 font-outfit">ONE GENTLE STEP</span>
+                    <h1 class="text-lg font-bold leading-tight flex items-center gap-1.5 text-slate-800 dark:text-white">
+                        파란 한걸음
+                        <span class="text-xs font-normal px-2 py-0.5 rounded-full bg-softBlue-100 dark:bg-slate-800 text-softBlue-700 dark:text-softBlue-300">다정하게</span>
+                    </h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="toggleFocusMode()" id="focusToggleBtn" title="하나만 보기 (집중)" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-softBlue-50 hover:text-softBlue-600 dark:hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-bullseye text-base"></i>
+                </button>
+                <button onclick="toggleNotificationPermission()" title="알림 설정" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-softBlue-50 hover:text-softBlue-600 dark:hover:bg-slate-700 transition">
+                    <i id="notifIcon" class="fa-solid fa-bell-slash text-slate-400 text-base"></i>
+                </button>
+                <button onclick="toggleDarkMode()" title="테마 변경" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-softBlue-50 hover:text-softBlue-600 dark:hover:bg-slate-700 transition">
+                    <i id="themeIcon" class="fa-solid fa-moon text-base"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-md mx-auto px-4 pt-4 space-y-5">
+
+        <!-- Encouraging Quote Banner -->
+        <section class="bg-gradient-to-r from-softBlue-500 via-softBlue-600 to-calmLavender-500 rounded-2xl p-4 text-white shadow-md relative overflow-hidden">
+            <div class="flex items-start justify-between gap-2 relative z-10">
+                <div class="space-y-1">
+                    <span class="text-[11px] font-semibold tracking-wider text-white/80 uppercase flex items-center gap-1">
+                        <i class="fa-solid fa-quote-left text-xs"></i> 오늘의 다정한 메시지
+                    </span>
+                    <p id="dailyQuoteText" class="text-sm font-bold leading-relaxed transition-all duration-300">
+                        "오늘 하지 못한 일이 있어도 괜찮아요. 쉰 것도 훌륭한 선택입니다."
+                    </p>
+                </div>
+                <button onclick="refreshDailyQuote()" title="다른 글귀 보기" class="p-2 rounded-xl bg-white/20 hover:bg-white/30 text-white transition backdrop-blur-sm shrink-0">
+                    <i class="fa-solid fa-shuffle text-xs"></i>
+                </button>
+            </div>
+            <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+        </section>
+
+        <!-- Date & Day Picker Bar -->
+        <section class="bg-white dark:bg-slate-900 rounded-2xl p-3.5 shadow-sm border border-slate-100 dark:border-slate-800">
+            <div class="flex items-center justify-between mb-3 px-1">
+                <span id="currentMonthYear" class="text-sm font-bold text-slate-700 dark:text-slate-200">2026년 11월</span>
+                <div class="flex items-center gap-1">
+                    <button onclick="changeWeek(-7)" class="w-7 h-7 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-500 text-xs">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button onclick="resetToToday()" class="px-2 py-1 text-xs bg-softBlue-50 dark:bg-slate-800 text-softBlue-600 dark:text-softBlue-400 rounded-md font-medium">오늘</button>
+                    <button onclick="changeWeek(7)" class="w-7 h-7 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-500 text-xs">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="weeklyStrip" class="grid grid-cols-7 gap-1 text-center"></div>
+        </section>
+
+        <!-- Dynamic View Container -->
+        <div id="mainViewArea" class="space-y-5">
+            
+            <!-- Quick Preset Routine Drawer -->
+            <section class="bg-gradient-to-br from-softBlue-50 via-white to-calmLavender-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/80 rounded-2xl p-4 shadow-sm border border-softBlue-100 dark:border-slate-800">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">✨</span>
+                        <h2 class="text-base font-bold text-slate-800 dark:text-slate-100">루틴 한 번에 불러오기</h2>
+                    </div>
+                    <span class="text-xs text-slate-400">필요한 것만 골라도 돼요</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="bg-white/90 dark:bg-slate-800/90 rounded-xl p-3 border border-slate-100 dark:border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span>☀️</span>
+                                <span class="font-bold text-xs text-slate-700 dark:text-slate-200">아침 루틴</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mb-2">7가지 • 매일 반복</p>
+                        </div>
+                        <div class="flex gap-1.5 mt-1">
+                            <button onclick="addPresetGroup('morning', 'all')" class="flex-1 py-1 px-2 bg-softBlue-500 hover:bg-softBlue-600 text-white rounded-lg text-xs font-medium transition">전체 추가</button>
+                            <button onclick="openSelectModal('morning')" class="py-1 px-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 rounded-lg text-xs font-medium transition">골라 담기</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/90 dark:bg-slate-800/90 rounded-xl p-3 border border-slate-100 dark:border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span>🌙</span>
+                                <span class="font-bold text-xs text-slate-700 dark:text-slate-200">저녁 루틴</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mb-2">6가지 • 매일 반복</p>
+                        </div>
+                        <div class="flex gap-1.5 mt-1">
+                            <button onclick="addPresetGroup('evening', 'all')" class="flex-1 py-1 px-2 bg-softBlue-500 hover:bg-softBlue-600 text-white rounded-lg text-xs font-medium transition">전체 추가</button>
+                            <button onclick="openSelectModal('evening')" class="py-1 px-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 rounded-lg text-xs font-medium transition">골라 담기</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/90 dark:bg-slate-800/90 rounded-xl p-3 border border-slate-100 dark:border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span>🧹</span>
+                                <span class="font-bold text-xs text-slate-700 dark:text-slate-200">아침 청소</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mb-2">6가지 • 매일 반복</p>
+                        </div>
+                        <div class="flex gap-1.5 mt-1">
+                            <button onclick="addPresetGroup('morningCleaning', 'all')" class="flex-1 py-1 px-2 bg-softBlue-500 hover:bg-softBlue-600 text-white rounded-lg text-xs font-medium transition">전체 추가</button>
+                            <button onclick="openSelectModal('morningCleaning')" class="py-1 px-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 rounded-lg text-xs font-medium transition">골라 담기</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/90 dark:bg-slate-800/90 rounded-xl p-3 border border-slate-100 dark:border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span>🧼</span>
+                                <span class="font-bold text-xs text-slate-700 dark:text-slate-200">저녁 청소</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mb-2">5가지 • 매일 반복</p>
+                        </div>
+                        <div class="flex gap-1.5 mt-1">
+                            <button onclick="addPresetGroup('eveningCleaning', 'all')" class="flex-1 py-1 px-2 bg-softBlue-500 hover:bg-softBlue-600 text-white rounded-lg text-xs font-medium transition">전체 추가</button>
+                            <button onclick="openSelectModal('eveningCleaning')" class="py-1 px-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-200 rounded-lg text-xs font-medium transition">골라 담기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toggleable More Presets -->
+                <div id="morePresets" class="hidden mt-2.5 pt-2 border-t border-slate-200/50 dark:border-slate-700/50 grid grid-cols-2 gap-2.5">
+                    <div class="bg-white/90 dark:bg-slate-800/90 rounded-xl p-3 border border-slate-100 dark:border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span>📅</span>
+                                <span class="font-bold text-xs text-slate-700 dark:text-slate-200">주간 청소</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mb-2">6가지 • 매주 반복</p>
+                        </div>
+                        <div class="flex gap-1.5 mt-1">
+                            <button onclick="addPresetGroup('weeklyCleaning', 'all')" class="flex-1 py-1 px-2 bg-softBlue-500 hover:bg-softBlue-600 text-white rounded-lg text-xs font-medium transition">전체 추가</button>
+                            <button onclick="openSelectModal('weeklyCleaning')" class="py-1 px-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-lg text-xs font-medium transition">골라 담기</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/90 dark:bg-slate-800/90 rounded-xl p-3 border border-slate-100 dark:border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span>🗓️</span>
+                                <span class="font-bold text-xs text-slate-700 dark:text-slate-200">월간 청소</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mb-2">6가지 • 매월 반복</p>
+                        </div>
+                        <div class="flex gap-1.5 mt-1">
+                            <button onclick="addPresetGroup('monthlyCleaning', 'all')" class="flex-1 py-1 px-2 bg-softBlue-500 hover:bg-softBlue-600 text-white rounded-lg text-xs font-medium transition">전체 추가</button>
+                            <button onclick="openSelectModal('monthlyCleaning')" class="py-1 px-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-lg text-xs font-medium transition">골라 담기</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/90 dark:bg-slate-800/90 rounded-xl p-3 border border-slate-100 dark:border-slate-700 flex flex-col justify-between col-span-2">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1">
+                                <span>💊</span>
+                                <span class="font-bold text-xs text-slate-700 dark:text-slate-200">몸 돌보기 (약/운동/스트레칭)</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mb-2">6가지 • 약 먹기, 밴드운동, 스쿼트, 다리운동 등 세부 단계 포함</p>
+                        </div>
+                        <div class="flex gap-1.5 mt-1">
+                            <button onclick="addPresetGroup('selfCare', 'all')" class="flex-1 py-1 px-2 bg-softBlue-500 hover:bg-softBlue-600 text-white rounded-lg text-xs font-medium transition">전체 추가</button>
+                            <button onclick="openSelectModal('selfCare')" class="py-1 px-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 rounded-lg text-xs font-medium transition">골라 담기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="toggleMorePresets()" id="toggleMoreBtn" class="w-full mt-3 py-1 text-center text-xs text-softBlue-600 dark:text-softBlue-400 hover:underline flex items-center justify-center gap-1 font-medium">
+                    <span>▼ 더 많은 루틴 보기 (주간/월간/몸 돌보기)</span>
+                </button>
+
+                <!-- PWA Install Banner Button -->
+                <div id="pwaInstallBanner" class="mt-3 p-3 bg-gradient-to-r from-softBlue-50 to-calmLavender-50 dark:from-slate-800 dark:to-slate-800/60 rounded-xl border border-softBlue-200 dark:border-slate-700 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-mobile-screen-button text-softBlue-500 text-base"></i>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800 dark:text-white">홈 화면에 앱으로 설치하기</h4>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-400">바로가기 아이콘으로 더 편리하게 사용해요</p>
+                        </div>
+                    </div>
+                    <button onclick="installPWA()" id="pwaInstallBtn" class="px-3 py-1.5 bg-softBlue-500 hover:bg-softBlue-600 text-white rounded-lg text-xs font-bold shadow-sm transition">
+                        앱 설치
+                    </button>
+                </div>
+            </section>
+
+            <!-- Active Timer Widget -->
+            <section id="timerWidget" class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-800">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span id="timerStatusBadge" class="px-2.5 py-1 rounded-full text-xs font-bold bg-softBlue-100 text-softBlue-700 dark:bg-softBlue-950 dark:text-softBlue-300 flex items-center gap-1">
+                            <i class="fa-solid fa-play text-[10px]"></i> 10분 작업 모드
+                        </span>
+                    </div>
+                    <span id="timerSubInfo" class="text-xs text-slate-400">자동 순환 (작업 ↔ 휴식)</span>
+                </div>
+
+                <div class="flex flex-col items-center justify-center my-2">
+                    <div class="relative w-44 h-44 flex items-center justify-center my-1">
+                        <svg class="w-full h-full transform -rotate-90">
+                            <circle cx="88" cy="88" r="76" stroke="currentColor" stroke-width="10" class="text-slate-100 dark:text-slate-800" fill="transparent" />
+                            <circle id="timerProgressCircle" cx="88" cy="88" r="76" stroke="currentColor" stroke-width="10" class="text-softBlue-500 transition-all duration-500" stroke-dasharray="477.5" stroke-dashoffset="0" stroke-linecap="round" fill="transparent" />
+                        </svg>
+                        <div class="absolute flex flex-col items-center text-center">
+                            <span id="timerTaskTitle" class="text-xs font-semibold text-slate-500 dark:text-slate-400 max-w-[120px] truncate mb-0.5">선택된 할 일 없음</span>
+                            <span id="timerDisplay" class="text-3xl font-bold font-outfit tracking-tight text-slate-800 dark:text-white">10:00</span>
+                            <span id="timerNextNotice" class="text-[10px] text-slate-400 mt-1">다음: 10분 휴식</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 mt-3">
+                        <button onclick="toggleTimer()" id="timerStartBtn" class="px-5 py-2.5 rounded-xl bg-softBlue-500 hover:bg-softBlue-600 active:scale-95 text-white font-semibold text-sm shadow-sm transition flex items-center gap-2">
+                            <i class="fa-solid fa-play"></i> 시작
+                        </button>
+                        <button onclick="resetTimer()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition" title="초기화">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                        <button onclick="skipTimerMode()" class="px-3 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium transition" title="다음 모드로 건너뛰기">
+                            휴식 전환 ➔
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tasks List Section Container -->
+            <section class="space-y-3">
+                <div class="flex items-center justify-between px-1">
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-base font-bold text-slate-800 dark:text-slate-100">오늘의 할 일</h2>
+                        <span id="taskCountBadge" class="px-2 py-0.5 text-xs font-bold rounded-full bg-softBlue-100 dark:bg-slate-800 text-softBlue-600 dark:text-softBlue-400">0개</span>
+                    </div>
+                    <button onclick="openAddTaskModal()" class="text-xs font-semibold text-softBlue-600 dark:text-softBlue-400 hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-plus text-xs"></i> 직접 추가
+                    </button>
+                </div>
+                <div id="taskSectionsContainer" class="space-y-4"></div>
+            </section>
+
+            <!-- Mindful CBT Section -->
+            <section id="mindSection" class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 space-y-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">💙</span>
+                        <h2 class="text-base font-bold text-slate-800 dark:text-slate-100">마음 연습 & 다정한 점검</h2>
+                    </div>
+                    <span class="text-xs text-slate-400">부담 내려놓기</span>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="applyMindPreset('1min')" class="p-2.5 rounded-xl bg-softBlue-50 dark:bg-slate-800 hover:bg-softBlue-100 text-center transition">
+                        <span class="block text-xs font-bold text-softBlue-700 dark:text-softBlue-300">⏱️ 1분만</span>
+                        <span class="text-[10px] text-slate-400">딱 1분 시도</span>
+                    </button>
+                    <button onclick="applyMindPreset('oneItem')" class="p-2.5 rounded-xl bg-calmLavender-50 dark:bg-slate-800 hover:bg-calmLavender-100 text-center transition">
+                        <span class="block text-xs font-bold text-calmLavender-700 dark:text-calmLavender-300">📦 물건 하나</span>
+                        <span class="text-[10px] text-slate-400">하나만 정리</span>
+                    </button>
+                    <button onclick="applyMindPreset('postpone')" class="p-2.5 rounded-xl bg-warmRest-50 dark:bg-slate-800 hover:bg-warmRest-100 text-center transition">
+                        <span class="block text-xs font-bold text-warmRest-700 dark:text-warmRest-300">🌙 내일로</span>
+                        <span class="text-[10px] text-slate-400">부담 없이 미루기</span>
+                    </button>
+                </div>
+
+                <div class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-brain text-softBlue-500"></i> 생각을 다정하게 점검하기 (CBT)
+                        </span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-calmLavender-100 dark:bg-slate-800 text-calmLavender-500 font-medium">균형 잡힌 관점</span>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">1. 지금 나를 막거나 힘들게 하는 생각은?</label>
+                            <input type="text" id="cbtTriggerInput" placeholder="예: 오늘 계획을 하나도 못 지켜서 망했어, 아무것도 하기 싫어" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs focus:outline-none focus:border-softBlue-500 dark:text-white">
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-1">2. 생각 속 인지적 패턴 (하나 선택)</label>
+                            <div class="flex flex-wrap gap-1.5" id="cbtPatternContainer">
+                                <button onclick="selectCbtPattern(this, '모 아니면 도 (흑백논리)')" class="cbt-chip px-2.5 py-1 text-[11px] rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-softBlue-400 transition">모 아니면 도</button>
+                                <button onclick="selectCbtPattern(this, '과잉일반화 (항상 그래)')" class="cbt-chip px-2.5 py-1 text-[11px] rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-softBlue-400 transition">과잉일반화</button>
+                                <button onclick="selectCbtPattern(this, '파국화 (망했다고 느낌)')" class="cbt-chip px-2.5 py-1 text-[11px] rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-softBlue-400 transition">파국화</button>
+                                <button onclick="selectCbtPattern(this, '당위적 사고 (~해야만 해)')" class="cbt-chip px-2.5 py-1 text-[11px] rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-softBlue-400 transition">~해야만 해</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block text-[11px] font-semibold text-slate-600 dark:text-slate-400">3. 조금 더 균형 있고 다정한 표현으로 바꿔본다면?</label>
+                                <button onclick="suggestBalancedThought()" class="text-[10px] text-softBlue-600 dark:text-softBlue-400 hover:underline font-semibold">추천 표현 받기</button>
+                            </div>
+                            <input type="text" id="cbtBalancedInput" placeholder="예: 오늘 쉬어간 것도 몸이 필요로 한 거야. 하나만 해도 충분해!" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs focus:outline-none focus:border-softBlue-500 dark:text-white">
+                        </div>
+
+                        <button onclick="saveCbtLog()" class="w-full py-2 bg-calmLavender-500 hover:bg-calmLavender-600 text-white font-semibold text-xs rounded-xl shadow-sm transition">
+                            💙 마음 기록에 남기기
+                        </button>
+                    </div>
+
+                    <div id="cbtHistoryArea" class="mt-2 space-y-2 max-h-36 overflow-y-auto pr-1"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Focus Mode Full Screen Container -->
+        <div id="focusViewArea" class="hidden">
+            <div class="bg-gradient-to-b from-softBlue-600 via-softBlue-500 to-calmLavender-600 rounded-3xl p-6 text-white text-center shadow-xl space-y-4 relative overflow-hidden min-h-[350px] flex flex-col items-center justify-center">
+                <button onclick="setFocusMode(false)" class="absolute top-4 right-4 text-white/80 hover:text-white bg-white/10 p-2 rounded-full text-xs">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+                <span class="text-xs font-bold tracking-wider uppercase bg-white/20 px-3 py-1 rounded-full text-white/90">하나에만 집중해요</span>
+                <div id="focusTaskContent" class="w-full"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800">
+        <div class="max-w-md mx-auto grid grid-cols-4 py-2 text-center text-xs">
+            <button onclick="switchTab('today')" id="tabToday" class="flex flex-col items-center gap-1 text-softBlue-600 dark:text-softBlue-400 font-bold">
+                <i class="fa-solid fa-calendar-day text-base"></i>
+                <span>오늘</span>
+            </button>
+            <button onclick="switchTab('timer')" id="tabTimer" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                <i class="fa-solid fa-stopwatch text-base"></i>
+                <span>집중•휴식</span>
+            </button>
+            <button onclick="switchTab('mind')" id="tabMind" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                <i class="fa-solid fa-heart text-base"></i>
+                <span>마음 연습</span>
+            </button>
+            <button onclick="openAddTaskModal()" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                <i class="fa-solid fa-circle-plus text-base text-softBlue-500"></i>
+                <span>새 작업</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Modal: Add / Edit Task -->
+    <div id="addTaskModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[90vh] overflow-y-auto p-5 space-y-4 shadow-2xl border border-slate-100 dark:border-slate-800">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div>
+                    <span class="text-[11px] font-semibold text-softBlue-600 dark:text-softBlue-400">한 줄이면 충분해요</span>
+                    <h3 id="modalTitle" class="text-base font-bold text-slate-800 dark:text-white">할 일 만들기</h3>
+                </div>
+                <button onclick="closeAddTaskModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="taskForm" onsubmit="handleSaveTask(event)" class="space-y-4">
+                <input type="hidden" id="editTaskId" value="">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">어떤 일을 해볼까요?</label>
+                    <input type="text" id="taskTitleInput" oninput="autoSuggestBreakdown()" required placeholder="예: 설거지 하기, 밥하기, 욕실 청소..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-sm focus:outline-none focus:border-softBlue-500 dark:text-white">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">하루 중 시간대</label>
+                        <select id="taskTimeSlotSelect" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs focus:outline-none focus:border-softBlue-500 dark:text-white">
+                            <option value="anytime">언제든지</option>
+                            <option value="morning">아침 (Morning)</option>
+                            <option value="afternoon">오후 (Afternoon)</option>
+                            <option value="evening">저녁 (Evening)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">소요 시간 (분)</label>
+                        <input type="number" id="taskDurationInput" min="1" value="10" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs focus:outline-none focus:border-softBlue-500 dark:text-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">반복 설정</label>
+                    <select id="taskRepeatSelect" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 text-xs focus:outline-none focus:border-softBlue-500 dark:text-white">
+                        <option value="none">반복 없음</option>
+                        <option value="daily">매일</option>
+                        <option value="weekdays">평일마다</option>
+                        <option value="weekends">주말마다</option>
+                        <option value="weekly">매주</option>
+                        <option value="monthly">매월</option>
+                    </select>
+                </div>
+
+                <div class="bg-softBlue-50/60 dark:bg-slate-800/60 p-3 rounded-2xl border border-softBlue-100 dark:border-slate-700 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1">
+                            ✨ 작은 단계 (자동 제안)
+                        </span>
+                        <button type="button" onclick="triggerAutoBreakdown()" class="text-[11px] text-softBlue-600 dark:text-softBlue-400 font-semibold hover:underline">
+                            자동 생성하기
+                        </button>
+                    </div>
+                    <textarea id="subtasksTextarea" rows="4" placeholder="작은 단계를 한 줄씩 적어주세요." class="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-900 text-xs leading-relaxed focus:outline-none focus:border-softBlue-500 dark:text-white"></textarea>
+                </div>
+
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeAddTaskModal()" class="flex-1 py-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold text-xs rounded-xl">취소</button>
+                    <button type="submit" class="flex-1 py-3 bg-softBlue-500 hover:bg-softBlue-600 text-white font-semibold text-xs rounded-xl shadow-md">저장하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Selective Routine Load -->
+    <div id="selectRoutineModal" class="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-t-3xl sm:rounded-3xl max-h-[85vh] overflow-y-auto p-5 space-y-4 shadow-2xl border border-slate-100 dark:border-slate-800">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div>
+                    <span class="text-[11px] font-semibold text-softBlue-600 dark:text-softBlue-400">내 생활에 맞게 골라요</span>
+                    <h3 id="selectRoutineTitle" class="text-base font-bold text-slate-800 dark:text-white">루틴 골라 담기</h3>
+                </div>
+                <button onclick="closeSelectModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="selectiveItemsList" class="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1"></div>
+
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="toggleAllSelective(false)" class="py-2.5 px-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-medium rounded-xl">전체 해제</button>
+                <button type="button" onclick="confirmSelectiveAdd()" id="submitSelectiveBtn" class="flex-1 py-2.5 bg-softBlue-500 text-white font-semibold text-xs rounded-xl shadow-md">선택한 항목 추가하기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu Options Dropdown Sheet -->
+    <div id="taskOptionSheet" class="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-sm flex items-end justify-center hidden" onclick="closeOptionSheet(event)">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-t-3xl p-5 space-y-2 shadow-2xl border-t border-slate-100 dark:border-slate-800" onclick="event.stopPropagation()">
+            <div class="w-12 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto mb-3"></div>
+            <h4 id="optionSheetTaskTitle" class="text-sm font-bold text-slate-700 dark:text-slate-200 px-2 mb-2 truncate">작업 옵션</h4>
+            
+            <button onclick="executeTaskAction('start')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-softBlue-50 dark:hover:bg-slate-800 flex items-center gap-3 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-play text-softBlue-500"></i> 작업 시작하기 (타이머)
+            </button>
+            <button onclick="executeTaskAction('focus')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-softBlue-50 dark:hover:bg-slate-800 flex items-center gap-3 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-bullseye text-calmLavender-500"></i> 이 작업 하나만 보기
+            </button>
+            <button onclick="executeTaskAction('postpone')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-softBlue-50 dark:hover:bg-slate-800 flex items-center gap-3 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-calendar-arrow-down text-warmRest-500"></i> 내일로 미루기 (부담 없이)
+            </button>
+            <button onclick="executeTaskAction('duplicate')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-softBlue-50 dark:hover:bg-slate-800 flex items-center gap-3 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-copy text-slate-400"></i> 복사하기
+            </button>
+            <button onclick="executeTaskAction('edit')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-softBlue-50 dark:hover:bg-slate-800 flex items-center gap-3 text-xs font-semibold text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-pen text-slate-400"></i> 수정하기
+            </button>
+            <button onclick="executeTaskAction('delete')" class="w-full text-left px-4 py-3 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-3 text-xs font-semibold text-rose-600 dark:text-rose-400">
+                <i class="fa-solid fa-trash-can"></i> 삭제하기
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toastMessage" class="fixed top-16 left-1/2 transform -translate-x-1/2 z-50 bg-slate-800 text-white dark:bg-white dark:text-slate-900 px-4 py-2.5 rounded-full text-xs font-medium shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600"></i>
+        <span id="toastText">처리되었습니다.</span>
+    </div>
+
+    <script>
+        let deferredPrompt = null;
+        let currentSelectiveGroupKey = '';
+
+        const DAILY_QUOTES = [
+            "오늘 하지 못한 일이 있어도 괜찮아요. 쉰 것도 훌륭한 선택입니다.",
+            "딱 한 가지만 살짝 해보거나 쉬어도 괜찮아요. 나만의 속도가 가장 소중합니다.",
+            "작고 사소한 한 걸음이 모여 내일의 편안함이 돼요.",
+            "완벽하지 않아도 괜찮아요. 시작하기로 마음먹은 것만으로도 충분해요 💙",
+            "지친 날에는 아무것도 하지 않는 것도 내 몸과 마음을 돌보는 멋진 행동입니다."
+        ];
+
+        const PRESET_GROUPS = {
+            morning: {
+                title: "아침 루틴",
+                timeSlot: "morning",
+                repeat: "daily",
+                items: [
+                    { title: "기상 후 물 한 잔 마시기", duration: 1, icon: "💧" },
+                    { title: "약/영양제 챙겨먹기", duration: 1, icon: "💊", subtasks: ["물 준비하기", "약 먹기"] },
+                    { title: "창문 열어 환기하기", duration: 2, icon: "🪟" },
+                    { title: "침구 정돈하기", duration: 3, icon: "🛏️" },
+                    { title: "세안 및 양치하기", duration: 5, icon: "🪥" },
+                    { title: "아침 식사 챙기기", duration: 15, icon: "🥣" },
+                    { title: "오늘의 마인드 체크", duration: 2, icon: "🌿" }
+                ]
+            },
+            evening: {
+                title: "저녁 루틴",
+                timeSlot: "evening",
+                repeat: "daily",
+                items: [
+                    { title: "저녁 식사하기", duration: 30, icon: "🍱" },
+                    { title: "따뜻하게 샤워하기", duration: 20, icon: "🚿" },
+                    { title: "차 마시기 및 휴식", duration: 10, icon: "☕" },
+                    { title: "책 읽기", duration: 15, icon: "📖" },
+                    { title: "양치하기", duration: 3, icon: "🪥" },
+                    { title: "잠자기 준비", duration: 10, icon: "😴" }
+                ]
+            },
+            morningCleaning: {
+                title: "아침 청소",
+                timeSlot: "morning",
+                repeat: "daily",
+                items: [
+                    { title: "침구 정돈", duration: 3, icon: "🛏️" },
+                    { title: "환기하기", duration: 2, icon: "🪟" },
+                    { title: "식탁 닦기", duration: 3, icon: "🧽" },
+                    { title: "싱크대 정리", duration: 5, icon: "🍽️" },
+                    { title: "바닥 물건 치우기", duration: 5, icon: "🧹" },
+                    { title: "쓰레기통 확인", duration: 2, icon: "🗑️" }
+                ]
+            },
+            eveningCleaning: {
+                title: "저녁 청소",
+                timeSlot: "evening",
+                repeat: "daily",
+                items: [
+                    { title: "저녁 설거지", duration: 10, icon: "🍽️", subtasks: ["남은 식기 모으기", "컵/접시부터 씻기", "물기 정리하기"] },
+                    { title: "주방 상판 닦기", duration: 5, icon: "🧽", subtasks: ["조리대 물건 옮기기", "상판 구역 닦기"] },
+                    { title: "사용한 물건 제자리", duration: 5, icon: "🧺", subtasks: ["거실/식탁 물건 5개 고르기", "제자리에 두기"] },
+                    { title: "쓰레기 분리 정리", duration: 5, icon: "♻️", subtasks: ["일반 쓰레기/재활용 구분", "봉투 묶기"] },
+                    { title: "바닥 한 구역 정리", duration: 5, icon: "🧹", subtasks: ["발에 걸릴 물건 치우기", "작은 구역 쓸거나 닦기"] }
+                ]
+            },
+            weeklyCleaning: {
+                title: "주간 청소",
+                timeSlot: "afternoon",
+                repeat: "weekly",
+                items: [
+                    { title: "화장실 세면대·변기 청소", duration: 15, icon: "🚽", subtasks: ["청소용품 준비하기", "세면대 닦기", "변기 닦기 및 정리"] },
+                    { title: "방과 거실 먼지 닦기", duration: 10, icon: "🧹", subtasks: ["책상/선반 먼지 닦기"] },
+                    { title: "바닥 청소기·걸레질", duration: 15, icon: "🧹", subtasks: ["바닥 물건 치우기", "청소기 돌리기", "걸레질하기"] },
+                    { title: "수건·침구 세탁", duration: 15, icon: "🧺", subtasks: ["세탁물 분류하기", "세탁기 돌리기", "널기"] },
+                    { title: "냉장고 음식 확인", duration: 10, icon: "🥬", subtasks: ["남은 음식 살펴보기", "상한 음식 처리"] },
+                    { title: "분리수거 배출", duration: 10, icon: "♻️", subtasks: ["재활용품 모으기", "배출장에 버리기"] }
+                ]
+            },
+            monthlyCleaning: {
+                title: "월간 청소",
+                timeSlot: "afternoon",
+                repeat: "monthly",
+                items: [
+                    { title: "냉장고 선반 청소", duration: 20, icon: "🧊", subtasks: ["선반 닦기", "유통기한 확인"] },
+                    { title: "욕실 배수구 청소", duration: 10, icon: "🚿", subtasks: ["이물질 제거", "세제 청소"] },
+                    { title: "주방 후드 필터 청소", duration: 15, icon: "🍳", subtasks: ["필터 분리", "기름때 제거"] },
+                    { title: "창틀 먼지 닦기", duration: 15, icon: "🪟", subtasks: ["창틀 물걸레 닦기"] },
+                    { title: "옷장·서랍 정리", duration: 20, icon: "👕", subtasks: ["안 쓰는 옷 구분"] },
+                    { title: "세탁기 세조세 관리", duration: 10, icon: "🧺", subtasks: ["통세척 모드 가동"] }
+                ]
+            },
+            selfCare: {
+                title: "몸 돌보기",
+                timeSlot: "anytime",
+                repeat: "daily",
+                items: [
+                    { title: "약 먹기", duration: 1, icon: "💊", subtasks: ["물 한 잔 준비하기", "처방약 복용하기"] },
+                    { title: "영양제 먹기", duration: 1, icon: "🍊", subtasks: ["비타민/영양제 챙기기", "물과 함께 복용하기"] },
+                    { title: "밴드 운동", duration: 10, icon: "💪", subtasks: ["자세 고르기", "천천히 당기기", "호흡 정리하기"] },
+                    { title: "스쿼트", duration: 5, icon: "🪑", subtasks: ["의자나 벽 준비하기", "천천히 10회 동작", "쉬기"] },
+                    { title: "다리 운동", duration: 10, icon: "🦵", subtasks: ["누운 자세 잡기", "다리 천천히 들기", "스트레칭"] },
+                    { title: "스트레칭", duration: 5, icon: "🧘", subtasks: ["자세 고르기", "천천히 늘리기", "마무리 호흡하기"] }
+                ]
+            }
+        };
+
+        const AUTO_BREAKDOWN_RULES = [
+            { keywords: ["설거지"], subtasks: ["남은 식기 모으기", "컵이나 접시부터 씻기", "큰 냄비 닦기", "물기 정리하기"] },
+            { keywords: ["밥하기", "요리"], subtasks: ["메뉴 정하기", "필요한 재료 준비하기", "쌀 씻기/조리하기", "가볍게 정리하기"] },
+            { keywords: ["욕실", "화장실"], subtasks: ["청소용품 준비", "세면대 닦기", "변기 청소", "물 뿌려 마무리"] },
+            { keywords: ["스트레칭", "운동"], subtasks: ["편안한 공간 마련", "자세 잡기", "천천히 동작 반복", "깊게 호흡하기"] },
+            { keywords: ["약", "영양제"], subtasks: ["물 한 잔 컵에 따라오기", "약봉지나 영양제 꺼내기", "천천히 복용하기"] }
+        ];
+
+        let state = {
+            selectedDate: new Date(),
+            tasks: [],
+            cbtLogs: [],
+            selectedCbtPattern: '',
+            notificationsEnabled: false,
+            focusMode: false,
+            focusTaskId: null,
+            activeOptionTaskId: null,
+            timer: {
+                mode: 'work',
+                duration: 600,
+                remaining: 600,
+                isRunning: false,
+                intervalId: null,
+                associatedTaskId: null
+            }
+        };
+
+        function getFormattedDate(d) {
+            const date = d || new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function refreshDailyQuote() {
+            const quoteElem = document.getElementById('dailyQuoteText');
+            if (quoteElem) {
+                const randomQuote = DAILY_QUOTES[Math.floor(Math.random() * DAILY_QUOTES.length)];
+                quoteElem.textContent = `"${randomQuote}"`;
+            }
+        }
+
+        window.onload = function() {
+            loadStateFromStorage();
+            refreshDailyQuote();
+            checkAndTriggerNotifications();
+            renderWeeklyStrip();
+            renderTasks();
+            renderCbtLogs();
+            updateTimerDisplay();
+            initAudioContext();
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                const banner = document.getElementById('pwaInstallBanner');
+                if (banner) banner.style.display = 'flex';
+            });
+        };
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showToast("홈 화면에 앱이 설치되었습니다! 🎉");
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                showToast("브라우저 메뉴에서 '홈 화면에 추가'를 누르면 설치됩니다 📱");
+            }
+        }
+
+        function saveStateToStorage() {
+            try {
+                localStorage.setItem('gentleStepState', JSON.stringify({
+                    tasks: state.tasks,
+                    cbtLogs: state.cbtLogs,
+                    notificationsEnabled: state.notificationsEnabled,
+                    timer: {
+                        mode: state.timer.mode,
+                        remaining: state.timer.remaining,
+                        duration: state.timer.duration,
+                        associatedTaskId: state.timer.associatedTaskId
+                    }
+                }));
+            } catch (e) {
+                console.warn('LocalStorage save failed:', e);
+            }
+        }
+
+        function loadStateFromStorage() {
+            try {
+                const saved = localStorage.getItem('gentleStepState');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.tasks && Array.isArray(parsed.tasks)) state.tasks = parsed.tasks;
+                    if (parsed.cbtLogs && Array.isArray(parsed.cbtLogs)) state.cbtLogs = parsed.cbtLogs;
+                    if (typeof parsed.notificationsEnabled === 'boolean') {
+                        state.notificationsEnabled = parsed.notificationsEnabled;
+                        const icon = document.getElementById('notifIcon');
+                        if (icon) {
+                            icon.className = state.notificationsEnabled 
+                                ? "fa-solid fa-bell text-softBlue-500 text-base" 
+                                : "fa-solid fa-bell-slash text-slate-400 text-base";
+                        }
+                    }
+                    if (parsed.timer) {
+                        state.timer.mode = parsed.timer.mode || 'work';
+                        state.timer.remaining = parsed.timer.remaining || 600;
+                        state.timer.duration = parsed.timer.duration || 600;
+                        state.timer.associatedTaskId = parsed.timer.associatedTaskId || null;
+                    }
+                }
+            } catch (e) {
+                console.warn('LocalStorage load failed:', e);
+            }
+        }
+
+        function changeWeek(offsetDays) {
+            state.selectedDate.setDate(state.selectedDate.getDate() + offsetDays);
+            renderWeeklyStrip();
+            renderTasks();
+        }
+
+        function resetToToday() {
+            state.selectedDate = new Date();
+            renderWeeklyStrip();
+            renderTasks();
+        }
+
+        function renderWeeklyStrip() {
+            const container = document.getElementById('weeklyStrip');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const today = new Date();
+            const current = new Date(state.selectedDate);
+            const dayOfWeek = current.getDay();
+            
+            const startOfWeek = new Date(current);
+            startOfWeek.setDate(current.getDate() - dayOfWeek);
+
+            const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+
+            document.getElementById('currentMonthYear').textContent = `${current.getFullYear()}년 ${current.getMonth() + 1}월`;
+
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(startOfWeek);
+                d.setDate(startOfWeek.getDate() + i);
+
+                const isSelected = getFormattedDate(d) === getFormattedDate(state.selectedDate);
+                const isToday = getFormattedDate(d) === getFormattedDate(today);
+
+                const btn = document.createElement('button');
+                btn.onclick = () => {
+                    state.selectedDate = new Date(d);
+                    renderWeeklyStrip();
+                    renderTasks();
+                };
+                btn.className = `flex flex-col items-center py-2 px-1 rounded-xl transition ${
+                    isSelected 
+                        ? 'bg-softBlue-500 text-white font-bold shadow-sm' 
+                        : isToday 
+                            ? 'bg-softBlue-50 dark:bg-slate-800 text-softBlue-600 dark:text-softBlue-400 font-semibold' 
+                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`;
+
+                btn.innerHTML = `
+                    <span class="text-[10px] opacity-75 mb-0.5">${dayNames[i]}</span>
+                    <span class="text-sm font-outfit">${d.getDate()}</span>
+                `;
+                container.appendChild(btn);
+            }
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('taskSectionsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const currentDateStr = getFormattedDate(state.selectedDate);
+            const filteredTasks = state.tasks.filter(t => t.dateStr === currentDateStr);
+
+            document.getElementById('taskCountBadge').textContent = `${filteredTasks.length}개`;
+
+            if (filteredTasks.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 px-4 bg-white dark:bg-slate-900 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 space-y-2">
+                        <div class="text-3xl">🌿</div>
+                        <p class="text-xs font-bold text-slate-600 dark:text-slate-300">오늘 등록된 할 일이 없어요</p>
+                        <p class="text-[11px] text-slate-400">위의 '루틴 한 번에 불러오기'나 '+ 추가' 버튼을 눌러보세요.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const timeSlotMap = {
+                anytime: { title: "언제든지", icon: "⏰" },
+                morning: { title: "아침 (Morning)", icon: "☀️" },
+                afternoon: { title: "오후 (Afternoon)", icon: "🌤️" },
+                evening: { title: "저녁 (Evening)", icon: "🌙" }
+            };
+
+            const slots = ['anytime', 'morning', 'afternoon', 'evening'];
+
+            slots.forEach(slotKey => {
+                const slotTasks = filteredTasks.filter(t => (t.timeSlot || 'anytime') === slotKey);
+                if (slotTasks.length === 0) return;
+
+                const meta = timeSlotMap[slotKey];
+                const section = document.createElement('div');
+                section.className = 'space-y-2';
+
+                section.innerHTML = `
+                    <div class="flex items-center gap-1.5 px-1 pt-1">
+                        <span class="text-xs">${meta.icon}</span>
+                        <h3 class="text-xs font-bold text-slate-700 dark:text-slate-300">${meta.title} (${slotTasks.length})</h3>
+                    </div>
+                `;
+
+                const taskList = document.createElement('div');
+                taskList.className = 'space-y-2';
+
+                slotTasks.forEach(task => {
+                    const card = document.createElement('div');
+                    card.className = `p-3.5 rounded-2xl border transition shadow-sm ${
+                        task.completed 
+                            ? 'bg-slate-50/70 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800 opacity-60' 
+                            : 'bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-softBlue-200 dark:hover:border-slate-700'
+                    }`;
+
+                    const completedSubCount = task.subtasks ? task.subtasks.filter(s => s.completed).length : 0;
+                    const totalSubCount = task.subtasks ? task.subtasks.length : 0;
+
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3 min-w-0 flex-1">
+                                <button onclick="toggleTaskCompletion('${task.id}')" class="text-slate-400 hover:text-softBlue-500 transition text-lg">
+                                    ${task.completed ? '<i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i>' : '<i class="fa-regular fa-circle text-xl"></i>'}
+                                </button>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="text-sm">${task.icon || '📌'}</span>
+                                        <h4 class="text-xs font-bold text-slate-800 dark:text-slate-100 truncate ${task.completed ? 'line-through text-slate-400' : ''}">${escapeHtml(task.title)}</h4>
+                                        ${task.repeat && task.repeat !== 'none' ? `<span class="text-[9px] px-1.5 py-0.5 rounded bg-softBlue-50 dark:bg-slate-800 text-softBlue-600 dark:text-softBlue-400 font-semibold">${task.repeat}</span>` : ''}
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 mt-0.5">${task.duration || 10}분 소요</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-1">
+                                <button onclick="startTaskTimer('${task.id}')" class="p-2 rounded-xl bg-softBlue-50 dark:bg-slate-800 text-softBlue-600 dark:text-softBlue-400 hover:bg-softBlue-100 text-xs font-medium" title="타이머 시작">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                                <button onclick="openOptionSheet('${task.id}')" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 text-xs">
+                                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        ${totalSubCount > 0 ? `
+                            <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                                <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                                    <span>작은 단계 (${completedSubCount}/${totalSubCount})</span>
+                                </div>
+                                <div class="space-y-1">
+                                    ${task.subtasks.map((sub, sIdx) => `
+                                        <div class="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                                            <button onclick="toggleSubtaskCompletion('${task.id}', ${sIdx})" class="text-slate-400 hover:text-softBlue-500">
+                                                ${sub.completed ? '<i class="fa-solid fa-check text-emerald-500 text-xs"></i>' : '<i class="fa-regular fa-square text-xs"></i>'}
+                                            </button>
+                                            <span class="${sub.completed ? 'line-through text-slate-400' : ''}">${escapeHtml(sub.text)}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    `;
+                    taskList.appendChild(card);
+                });
+
+                section.appendChild(taskList);
+                container.appendChild(section);
+            });
+        }
+
+        function calculateNextRecurringDate(currentDateStr, repeatType) {
+            const dateParts = currentDateStr.split('-');
+            const date = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+            
+            if (repeatType === 'daily') {
+                date.setDate(date.getDate() + 1);
+            } else if (repeatType === 'weekly') {
+                date.setDate(date.getDate() + 7);
+            } else if (repeatType === 'monthly') {
+                date.setMonth(date.getMonth() + 1);
+            } else if (repeatType === 'weekdays') {
+                do {
+                    date.setDate(date.getDate() + 1);
+                } while (date.getDay() === 0 || date.getDay() === 6);
+            }
+            return getFormattedDate(date);
+        }
+
+        function toggleTaskCompletion(taskId) {
+            const task = state.tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                if (task.completed) {
+                    if (task.subtasks) task.subtasks.forEach(s => s.completed = true);
+                    
+                    if (task.repeat && task.repeat !== 'none') {
+                        const nextDateStr = calculateNextRecurringDate(task.dateStr, task.repeat);
+                        const exists = state.tasks.some(t => t.title === task.title && t.dateStr === nextDateStr);
+                        if (!exists) {
+                            state.tasks.push({
+                                id: "task_" + Date.now() + Math.random().toString(36).substr(2, 4),
+                                title: task.title,
+                                duration: task.duration,
+                                timeSlot: task.timeSlot,
+                                repeat: task.repeat,
+                                dateStr: nextDateStr,
+                                icon: task.icon,
+                                completed: false,
+                                subtasks: task.subtasks ? task.subtasks.map(s => ({ text: s.text, completed: false })) : []
+                            });
+                            showToast(`완료! 다음 주기(${nextDateStr})에 자동 재등록되었습니다 📅`);
+                        }
+                    } else {
+                        showToast("할 일을 완수했어요! 수고하셨어요 💙");
+                    }
+                }
+                saveStateToStorage();
+                renderTasks();
+            }
+        }
+
+        function toggleSubtaskCompletion(taskId, subtaskIdx) {
+            const task = state.tasks.find(t => t.id === taskId);
+            if (task && task.subtasks && task.subtasks[subtaskIdx]) {
+                task.subtasks[subtaskIdx].completed = !task.subtasks[subtaskIdx].completed;
+                saveStateToStorage();
+                renderTasks();
+                if (state.focusMode) renderFocusTask();
+            }
+        }
+
+        function openOptionSheet(taskId) {
+            state.activeOptionTaskId = taskId;
+            const task = state.tasks.find(t => t.id === taskId);
+            if (task) document.getElementById('optionSheetTaskTitle').textContent = task.title;
+            document.getElementById('taskOptionSheet').classList.remove('hidden');
+        }
+
+        function closeOptionSheet(e) {
+            document.getElementById('taskOptionSheet').classList.add('hidden');
+        }
+
+        function executeTaskAction(action) {
+            const taskId = state.activeOptionTaskId;
+            closeOptionSheet();
+            if (!taskId) return;
+
+            const task = state.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            if (action === 'start') {
+                startTaskTimer(taskId);
+            } else if (action === 'focus') {
+                state.focusTaskId = taskId;
+                setFocusMode(true);
+            } else if (action === 'postpone') {
+                const tomorrow = new Date(state.selectedDate);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                task.dateStr = getFormattedDate(tomorrow);
+                saveStateToStorage();
+                renderTasks();
+                showToast("내일 일정으로 편하게 이동했어요 🌿");
+            } else if (action === 'duplicate') {
+                const newTask = JSON.parse(JSON.stringify(task));
+                newTask.id = "task_" + Date.now();
+                newTask.title = task.title + " (복사)";
+                newTask.completed = false;
+                state.tasks.push(newTask);
+                saveStateToStorage();
+                renderTasks();
+                showToast("작업이 복사되었습니다.");
+            } else if (action === 'edit') {
+                openEditTaskModal(task);
+            } else if (action === 'delete') {
+                state.tasks = state.tasks.filter(t => t.id !== taskId);
+                saveStateToStorage();
+                renderTasks();
+                showToast("작업이 삭제되었습니다.");
+            }
+        }
+
+        function addPresetGroup(groupKey, mode) {
+            const group = PRESET_GROUPS[groupKey];
+            if (!group) return;
+
+            const currentDateStr = getFormattedDate(state.selectedDate);
+            let addedCount = 0;
+
+            group.items.forEach(item => {
+                const exists = state.tasks.some(t => t.title === item.title && t.dateStr === currentDateStr);
+                if (!exists) {
+                    state.tasks.push({
+                        id: "task_" + Date.now() + Math.random().toString(36).substr(2, 4),
+                        title: item.title,
+                        duration: item.duration,
+                        timeSlot: group.timeSlot,
+                        repeat: group.repeat,
+                        dateStr: currentDateStr,
+                        icon: item.icon,
+                        completed: false,
+                        subtasks: item.subtasks ? item.subtasks.map(s => ({ text: s, completed: false })) : []
+                    });
+                    addedCount++;
+                }
+            });
+
+            saveStateToStorage();
+            renderTasks();
+            showToast(`${group.title} ${addedCount}개 항목이 추가되었습니다!`);
+        }
+
+        function openSelectModal(groupKey) {
+            currentSelectiveGroupKey = groupKey;
+            const group = PRESET_GROUPS[groupKey];
+            if (!group) return;
+
+            document.getElementById('selectRoutineTitle').textContent = `${group.title} 골라 담기`;
+            const listContainer = document.getElementById('selectiveItemsList');
+            listContainer.innerHTML = '';
+
+            const currentDateStr = getFormattedDate(state.selectedDate);
+
+            group.items.forEach((item, idx) => {
+                const isAlready = state.tasks.some(t => t.title === item.title && t.dateStr === currentDateStr);
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-xl border flex items-start gap-3 ${isAlready ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-60' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700'}`;
+                
+                div.innerHTML = `
+                    <input type="checkbox" id="sel_item_${idx}" ${isAlready ? 'disabled' : 'checked'} class="mt-1 w-4 h-4 text-softBlue-500 rounded border-slate-300">
+                    <label for="sel_item_${idx}" class="flex-1 cursor-pointer">
+                        <div class="flex items-center gap-1.5 font-bold text-xs text-slate-800 dark:text-slate-100">
+                            <span>${item.icon}</span>
+                            <span>${escapeHtml(item.title)}</span>
+                            ${isAlready ? '<span class="text-[10px] text-slate-400 font-normal">(이미 추가됨)</span>' : ''}
+                        </div>
+                        ${item.subtasks ? `<p class="text-[11px] text-slate-400 mt-1">${item.subtasks.join(' → ')}</p>` : ''}
+                    </label>
+                `;
+                listContainer.appendChild(div);
+            });
+
+            document.getElementById('selectRoutineModal').classList.remove('hidden');
+        }
+
+        function closeSelectModal() {
+            document.getElementById('selectRoutineModal').classList.add('hidden');
+        }
+
+        function toggleAllSelective(checkedState) {
+            const group = PRESET_GROUPS[currentSelectiveGroupKey];
+            if (!group) return;
+            group.items.forEach((_, idx) => {
+                const chk = document.getElementById(`sel_item_${idx}`);
+                if (chk && !chk.disabled) chk.checked = checkedState;
+            });
+        }
+
+        function confirmSelectiveAdd() {
+            const group = PRESET_GROUPS[currentSelectiveGroupKey];
+            if (!group) return;
+
+            const currentDateStr = getFormattedDate(state.selectedDate);
+            let count = 0;
+
+            group.items.forEach((item, idx) => {
+                const chk = document.getElementById(`sel_item_${idx}`);
+                if (chk && chk.checked && !chk.disabled) {
+                    state.tasks.push({
+                        id: "task_" + Date.now() + Math.random().toString(36).substr(2, 4),
+                        title: item.title,
+                        duration: item.duration,
+                        timeSlot: group.timeSlot,
+                        repeat: group.repeat,
+                        dateStr: currentDateStr,
+                        icon: item.icon,
+                        completed: false,
+                        subtasks: item.subtasks ? item.subtasks.map(s => ({ text: s, completed: false })) : []
+                    });
+                    count++;
+                }
+            });
+
+            saveStateToStorage();
+            renderTasks();
+            closeSelectModal();
+            showToast(`${count}개의 항목을 담았습니다.`);
+        }
+
+        function toggleMorePresets() {
+            const moreDiv = document.getElementById('morePresets');
+            const btn = document.getElementById('toggleMoreBtn');
+            if (moreDiv.classList.contains('hidden')) {
+                moreDiv.classList.remove('hidden');
+                btn.innerHTML = '<span>▲ 루틴 접기</span>';
+            } else {
+                moreDiv.classList.add('hidden');
+                btn.innerHTML = '<span>▼ 더 많은 루틴 보기 (주간/월간/몸 돌보기)</span>';
+            }
+        }
+
+        function openAddTaskModal() {
+            document.getElementById('editTaskId').value = '';
+            document.getElementById('modalTitle').textContent = '할 일 만들기';
+            document.getElementById('taskTitleInput').value = '';
+            document.getElementById('subtasksTextarea').value = '';
+            document.getElementById('taskDurationInput').value = '10';
+            document.getElementById('taskTimeSlotSelect').value = 'anytime';
+            document.getElementById('taskRepeatSelect').value = 'none';
+            document.getElementById('addTaskModal').classList.remove('hidden');
+        }
+
+        function openEditTaskModal(task) {
+            document.getElementById('editTaskId').value = task.id;
+            document.getElementById('modalTitle').textContent = '작업 수정';
+            document.getElementById('taskTitleInput').value = task.title;
+            document.getElementById('taskDurationInput').value = task.duration;
+            document.getElementById('taskTimeSlotSelect').value = task.timeSlot;
+            document.getElementById('taskRepeatSelect').value = task.repeat;
+            
+            const subStr = task.subtasks ? task.subtasks.map(s => s.text).join('\n') : '';
+            document.getElementById('subtasksTextarea').value = subStr;
+            document.getElementById('addTaskModal').classList.remove('hidden');
+        }
+
+        function closeAddTaskModal() {
+            document.getElementById('addTaskModal').classList.add('hidden');
+        }
+
+        function autoSuggestBreakdown() {
+            const inputVal = document.getElementById('taskTitleInput').value.trim();
+            const textarea = document.getElementById('subtasksTextarea');
+            if (!inputVal) return;
+
+            const rule = AUTO_BREAKDOWN_RULES.find(r => r.keywords.some(k => inputVal.includes(k)));
+            if (rule && (!textarea.value || textarea.dataset.autosuggested === "true")) {
+                textarea.value = rule.subtasks.join('\n');
+                textarea.dataset.autosuggested = "true";
+            }
+        }
+
+        function triggerAutoBreakdown() {
+            const inputVal = document.getElementById('taskTitleInput').value.trim();
+            const textarea = document.getElementById('subtasksTextarea');
+            
+            if (!inputVal) {
+                showToast("먼저 할 일 이름을 입력해주세요!");
+                return;
+            }
+
+            const rule = AUTO_BREAKDOWN_RULES.find(r => r.keywords.some(k => inputVal.includes(k)));
+            if (rule) {
+                textarea.value = rule.subtasks.join('\n');
+            } else {
+                textarea.value = "1. 준비물 모으기\n2. 5분 동안 시도하기\n3. 정리하고 쉬기";
+            }
+            showToast("작은 단계가 자동으로 제안되었습니다.");
+        }
+
+        function handleSaveTask(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editTaskId').value;
+            const title = document.getElementById('taskTitleInput').value.trim();
+            const duration = parseInt(document.getElementById('taskDurationInput').value) || 10;
+            const timeSlot = document.getElementById('taskTimeSlotSelect').value;
+            const repeat = document.getElementById('taskRepeatSelect').value;
+            const subtasksRaw = document.getElementById('subtasksTextarea').value;
+
+            const subtasks = subtasksRaw.split('\n')
+                .map(s => s.trim())
+                .filter(s => s.length > 0)
+                .map(s => ({ text: s, completed: false }));
+
+            if (editId) {
+                const task = state.tasks.find(t => t.id === editId);
+                if (task) {
+                    task.title = title;
+                    task.duration = duration;
+                    task.timeSlot = timeSlot;
+                    task.repeat = repeat;
+                    task.subtasks = subtasks;
+                }
+            } else {
+                state.tasks.push({
+                    id: "task_" + Date.now(),
+                    title: title,
+                    duration: duration,
+                    timeSlot: timeSlot,
+                    repeat: repeat,
+                    dateStr: getFormattedDate(state.selectedDate),
+                    icon: "📌",
+                    completed: false,
+                    subtasks: subtasks
+                });
+            }
+
+            saveStateToStorage();
+            renderTasks();
+            closeAddTaskModal();
+            showToast(editId ? "작업이 수정되었습니다." : "새 할 일이 추가되었습니다.");
+        }
+
+        function startTaskTimer(taskId) {
+            const task = state.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            state.timer.associatedTaskId = taskId;
+            state.timer.mode = 'work';
+            state.timer.duration = (task.duration || 10) * 60;
+            state.timer.remaining = state.timer.duration;
+
+            document.getElementById('timerTaskTitle').textContent = task.title;
+            resetTimer();
+            toggleTimer();
+            document.getElementById('timerWidget').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('timerStartBtn');
+            if (state.timer.isRunning) {
+                clearInterval(state.timer.intervalId);
+                state.timer.isRunning = false;
+                btn.innerHTML = '<i class="fa-solid fa-play"></i> 계속';
+                btn.className = 'px-5 py-2.5 rounded-xl bg-softBlue-500 hover:bg-softBlue-600 text-white font-semibold text-sm transition flex items-center gap-2';
+            } else {
+                state.timer.isRunning = true;
+                btn.innerHTML = '<i class="fa-solid fa-pause"></i> 일시정지';
+                btn.className = 'px-5 py-2.5 rounded-xl bg-warmRest-500 hover:bg-warmRest-600 text-white font-semibold text-sm transition flex items-center gap-2';
+                state.timer.intervalId = setInterval(tickTimer, 1000);
+            }
+        }
+
+        function resetTimer() {
+            if (state.timer.intervalId) clearInterval(state.timer.intervalId);
+            state.timer.isRunning = false;
+            
+            if (state.timer.mode === 'work') {
+                const assocTask = state.tasks.find(t => t.id === state.timer.associatedTaskId);
+                state.timer.duration = assocTask ? (assocTask.duration * 60) : (10 * 60);
+            } else {
+                state.timer.duration = 10 * 60;
+            }
+
+            state.timer.remaining = state.timer.duration;
+            const btn = document.getElementById('timerStartBtn');
+            btn.innerHTML = '<i class="fa-solid fa-play"></i> 시작';
+            btn.className = 'px-5 py-2.5 rounded-xl bg-softBlue-500 hover:bg-softBlue-600 text-white font-semibold text-sm transition flex items-center gap-2';
+            
+            updateTimerDisplay();
+        }
+
+        function tickTimer() {
+            if (state.timer.remaining > 0) {
+                state.timer.remaining--;
+                updateTimerDisplay();
+                saveStateToStorage();
+            } else {
+                playChimeSound();
+                if (state.timer.mode === 'work') {
+                    state.timer.mode = 'rest';
+                    state.timer.duration = 10 * 60;
+                    state.timer.remaining = 10 * 60;
+                    showToast("🎉 10분 작업 완료! 이제 10분 동안 편하게 쉬어보세요.");
+                } else {
+                    state.timer.mode = 'work';
+                    state.timer.duration = 10 * 60;
+                    state.timer.remaining = 10 * 60;
+                    showToast("🌿 휴식 끝! 준비가 되면 천천히 시작해볼까요?");
+                }
+                updateTimerDisplay();
+            }
+        }
+
+        function skipTimerMode() {
+            if (state.timer.mode === 'work') {
+                state.timer.mode = 'rest';
+                state.timer.duration = 10 * 60;
+                state.timer.remaining = 10 * 60;
+            } else {
+                state.timer.mode = 'work';
+                state.timer.duration = 10 * 60;
+                state.timer.remaining = 10 * 60;
+            }
+            resetTimer();
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(state.timer.remaining / 60);
+            const secs = state.timer.remaining % 60;
+            const displayStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            
+            document.getElementById('timerDisplay').textContent = displayStr;
+
+            const circle = document.getElementById('timerProgressCircle');
+            const total = state.timer.duration || 600;
+            const ratio = state.timer.remaining / total;
+            const dashoffset = 477.5 * (1 - ratio);
+            circle.style.strokeDashoffset = dashoffset;
+
+            const badge = document.getElementById('timerStatusBadge');
+            const nextNotice = document.getElementById('timerNextNotice');
+            if (state.timer.mode === 'work') {
+                badge.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-softBlue-100 text-softBlue-700 dark:bg-slate-800 dark:text-softBlue-300 flex items-center gap-1';
+                badge.innerHTML = `<i class="fa-solid fa-briefcase text-[10px]"></i> 작업 모드`;
+                circle.style.stroke = '#36a8f6';
+                nextNotice.textContent = '다음: 10분 휴식';
+            } else {
+                badge.className = 'px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 flex items-center gap-1';
+                badge.innerHTML = `<i class="fa-solid fa-mug-hot text-[10px]"></i> 10분 편안한 휴식`;
+                circle.style.stroke = '#f59e0b';
+                nextNotice.textContent = '다음: 10분 작업';
+            }
+        }
+
+        function setFocusMode(active) {
+            state.focusMode = active;
+            const mainView = document.getElementById('mainViewArea');
+            const focusView = document.getElementById('focusViewArea');
+
+            if (active) {
+                mainView.classList.add('hidden');
+                focusView.classList.remove('hidden');
+                renderFocusTask();
+            } else {
+                mainView.classList.remove('hidden');
+                focusView.classList.add('hidden');
+            }
+        }
+
+        function toggleFocusMode() {
+            if (!state.focusTaskId) {
+                const currentDateStr = getFormattedDate(state.selectedDate);
+                const firstTask = state.tasks.find(t => t.dateStr === currentDateStr && !t.completed);
+                if (firstTask) {
+                    state.focusTaskId = firstTask.id;
+                } else if (state.tasks.length > 0) {
+                    state.focusTaskId = state.tasks[0].id;
+                }
+            }
+            setFocusMode(!state.focusMode);
+        }
+
+        function renderFocusTask() {
+            const container = document.getElementById('focusTaskContent');
+            const task = state.tasks.find(t => t.id === state.focusTaskId);
+
+            if (!task) {
+                container.innerHTML = `<p class="text-sm font-semibold">지금 선택된 집중 할 일이 없어요.</p>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="text-4xl my-2">${task.icon || '📌'}</div>
+                <h3 class="text-xl font-bold mb-1">${escapeHtml(task.title)}</h3>
+                <p class="text-xs text-white/80 mb-4">${task.duration}분 예상 • 하루 중 ${task.timeSlot}</p>
+
+                ${task.subtasks && task.subtasks.length > 0 ? `
+                    <div class="bg-white/10 rounded-2xl p-4 text-left space-y-2 mb-4 backdrop-blur-sm">
+                        <span class="text-xs font-bold text-white/90 block mb-1">작은 단계들</span>
+                        ${task.subtasks.map((sub, sIdx) => `
+                            <div class="flex items-center gap-2 text-xs">
+                                <button onclick="toggleSubtaskCompletion('${task.id}', ${sIdx})" class="text-white">
+                                    ${sub.completed ? '<i class="fa-solid fa-square-check text-base"></i>' : '<i class="fa-regular fa-square text-base"></i>'}
+                                </button>
+                                <span class="${sub.completed ? 'line-through opacity-60' : ''}">${escapeHtml(sub.text)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+
+                <div class="flex items-center justify-center gap-2">
+                    <button onclick="toggleTaskCompletion('${task.id}')" class="px-5 py-2.5 rounded-xl bg-white text-softBlue-600 font-bold text-xs shadow-md">
+                        ${task.completed ? '완료 취소' : '이 할 일 끝내기 ✨'}
+                    </button>
+                    <button onclick="startTaskTimer('${task.id}')" class="px-4 py-2.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-semibold text-xs">
+                        <i class="fa-solid fa-play mr-1"></i> 타이머 켜기
+                    </button>
+                </div>
+            `;
+        }
+
+        function applyMindPreset(presetType) {
+            if (presetType === '1min') {
+                showToast("딱 1분만 살짝 해보세요. 멈춰도 아주 훌륭해요!");
+                state.timer.mode = 'work';
+                state.timer.duration = 1 * 60;
+                state.timer.remaining = 1 * 60;
+                resetTimer();
+                toggleTimer();
+            } else if (presetType === 'oneItem') {
+                showToast("주변 물건 하나만 제자리에 놓아보세요 📦");
+            } else if (presetType === 'postpone') {
+                const currentDateStr = getFormattedDate(state.selectedDate);
+                const incompleteTasks = state.tasks.filter(t => t.dateStr === currentDateStr && !t.completed);
+                if (incompleteTasks.length === 0) {
+                    showToast("미룰 할 일이 없어요!");
+                    return;
+                }
+                const tomorrow = new Date(state.selectedDate);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const tomorrowStr = getFormattedDate(tomorrow);
+
+                incompleteTasks.forEach(t => t.dateStr = tomorrowStr);
+                saveStateToStorage();
+                renderTasks();
+                showToast("남은 할 일들이 내일로 마음 편히 이동했어요 🌙");
+            }
+        }
+
+        function selectCbtPattern(btnElem, patternName) {
+            state.selectedCbtPattern = patternName;
+            document.querySelectorAll('.cbt-chip').forEach(c => {
+                c.classList.remove('bg-softBlue-500', 'text-white', 'border-softBlue-500');
+                c.classList.add('bg-slate-50', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+            });
+            btnElem.classList.remove('bg-slate-50', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+            btnElem.classList.add('bg-softBlue-500', 'text-white', 'border-softBlue-500');
+        }
+
+        function suggestBalancedThought() {
+            const trigger = document.getElementById('cbtTriggerInput').value.trim();
+            const balancedInput = document.getElementById('cbtBalancedInput');
+            
+            if (trigger.includes('망했어') || trigger.includes('못했어')) {
+                balancedInput.value = "오늘 쉰 것도 몸에 필요한 선택이었어. 지금 하나만 시작해봐도 좋아.";
+            } else if (trigger.includes('하기 싫어') || trigger.includes('힘들어')) {
+                balancedInput.value = "딱 1분만 살짝 해보거나, 편안하게 내일로 미뤄도 괜찮아.";
+            } else {
+                balancedInput.value = "완벽하게 끝내지 않아도 괜찮아. 나만의 속도로 조금씩 해나가면 돼!";
+            }
+            showToast("다정한 균형 생각이 제안되었습니다. ✨");
+        }
+
+        function saveCbtLog() {
+            const trigger = document.getElementById('cbtTriggerInput').value.trim();
+            const balanced = document.getElementById('cbtBalancedInput').value.trim();
+            
+            if (!trigger || !balanced) {
+                showToast("생각과 대안적 다정한 표현을 모두 작성해 주세요!");
+                return;
+            }
+
+            const newLog = {
+                id: 'cbt_' + Date.now(),
+                dateStr: getFormattedDate(new Date()),
+                trigger: trigger,
+                pattern: state.selectedCbtPattern || '다정한 시선',
+                balanced: balanced
+            };
+
+            state.cbtLogs.unshift(newLog);
+            if (state.cbtLogs.length > 10) state.cbtLogs.pop();
+
+            document.getElementById('cbtTriggerInput').value = '';
+            document.getElementById('cbtBalancedInput').value = '';
+            state.selectedCbtPattern = '';
+            document.querySelectorAll('.cbt-chip').forEach(c => {
+                c.classList.remove('bg-softBlue-500', 'text-white', 'border-softBlue-500');
+                c.classList.add('bg-slate-50', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+            });
+
+            saveStateToStorage();
+            renderCbtLogs();
+            showToast("마음 기록이 다정하게 보관되었습니다. 💙");
+        }
+
+        function renderCbtLogs() {
+            const container = document.getElementById('cbtHistoryArea');
+            if (!container) return;
+
+            if (!state.cbtLogs || state.cbtLogs.length === 0) {
+                container.innerHTML = `<div class="text-center py-3 text-[11px] text-slate-400">아직 보관된 마음 기록이 없어요.</div>`;
+                return;
+            }
+
+            container.innerHTML = state.cbtLogs.map(log => `
+                <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs space-y-1">
+                    <div class="flex items-center justify-between text-[10px] text-slate-400">
+                        <span>${log.dateStr}</span>
+                        <span class="font-medium text-calmLavender-500">${escapeHtml(log.pattern)}</span>
+                    </div>
+                    <p class="text-slate-500 dark:text-slate-400 line-through text-[11px]">"${escapeHtml(log.trigger)}"</p>
+                    <p class="font-bold text-softBlue-600 dark:text-softBlue-400">➔ "${escapeHtml(log.balanced)}"</p>
+                </div>
+            `).join('');
+        }
+
+        function toggleNotificationPermission() {
+            const icon = document.getElementById('notifIcon');
+            
+            if (state.notificationsEnabled) {
+                state.notificationsEnabled = false;
+                if (icon) icon.className = "fa-solid fa-bell-slash text-slate-400 text-base";
+                saveStateToStorage();
+                showToast("알림이 꺼졌습니다 🔇");
+                return;
+            }
+
+            if ("Notification" in window) {
+                if (Notification.permission === "granted") {
+                    state.notificationsEnabled = true;
+                    if (icon) icon.className = "fa-solid fa-bell text-softBlue-500 text-base";
+                    saveStateToStorage();
+                    showToast("알림이 켜졌습니다 🔔");
+                } else if (Notification.permission !== "denied") {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === "granted") {
+                            state.notificationsEnabled = true;
+                            if (icon) icon.className = "fa-solid fa-bell text-softBlue-500 text-base";
+                            saveStateToStorage();
+                            showToast("알림이 허용되고 켜졌습니다 🔔");
+                        } else {
+                            showToast("브라우저 알림 권한이 필요합니다.");
+                        }
+                    });
+                } else {
+                    showToast("브라우저 설정에서 알림 권한을 허용해 주세요.");
+                }
+            } else {
+                showToast("이 브라우저는 알림 기능을 지원하지 않습니다.");
+            }
+        }
+
+        function checkAndTriggerNotifications() {
+            if (!state.notificationsEnabled) return;
+            const todayStr = getFormattedDate(new Date());
+            const todayTasks = state.tasks.filter(t => t.dateStr === todayStr && !t.completed);
+            
+            if (todayTasks.length > 0 && "Notification" in window && Notification.permission === "granted") {
+                const repeatTasks = todayTasks.filter(t => t.repeat === 'weekly' || t.repeat === 'monthly');
+                if (repeatTasks.length > 0) {
+                    new Notification("파란 한걸음 알림 🌿", {
+                        body: `오늘 진행할 주간/월간 루틴 (${repeatTasks.length}개)이 있습니다.`,
+                        icon: "https://placehold.co/128x128/0c8ce9/ffffff?text=Step"
+                    });
+                }
+            }
+        }
+
+        function switchTab(tabName) {
+            if (tabName === 'today') {
+                setFocusMode(false);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else if (tabName === 'timer') {
+                setFocusMode(false);
+                document.getElementById('timerWidget').scrollIntoView({ behavior: 'smooth' });
+            } else if (tabName === 'mind') {
+                setFocusMode(false);
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            }
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                themeIcon.className = 'fa-solid fa-moon text-base';
+            } else {
+                html.classList.add('dark');
+                themeIcon.className = 'fa-solid fa-sun text-base';
+            }
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('toastMessage');
+            const toastText = document.getElementById('toastText');
+            toastText.textContent = text;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        let audioCtx = null;
+        function initAudioContext() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            } catch (e) {
+                console.warn('AudioContext not supported');
+            }
+        }
+
+        function playChimeSound() {
+            if (!audioCtx) initAudioContext();
+            if (!audioCtx) return;
+
+            try {
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.3);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 1.2);
+            } catch (e) {
+                console.warn('Play chime error:', e);
+            }
+        }
+    </script>
+</body>
+</html>
